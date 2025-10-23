@@ -24,6 +24,7 @@ export interface ButtonProps
   children: ReactNode;
   isLoading?: boolean;
   fullWidth?: boolean;
+  asChild?: boolean;
 }
 
 /**

@@ -1,5 +1,6 @@
 import { ButtonProps } from "@/types/components";
 import { cn } from "@/lib/utils";
+import { ReactElement, cloneElement } from "react";
 
 /**
  * Button component with multiple variants and sizes
@@ -14,6 +15,7 @@ export function Button({
   isLoading = false,
   fullWidth = false,
   type = "button",
+  asChild = false,
   ...props
 }: ButtonProps) {
   const baseStyles =
@@ -38,16 +40,26 @@ export function Button({
 
   const widthStyles = fullWidth ? "w-full" : "";
 
+  const buttonClasses = cn(
+    baseStyles,
+    variantStyles[variant],
+    sizeStyles[size],
+    widthStyles,
+    className
+  );
+
+  if (asChild) {
+    const child = children as ReactElement<{ className?: string }>;
+    return cloneElement(child, {
+      ...child.props,
+      className: cn(child.props.className, buttonClasses),
+    });
+  }
+
   return (
     <button
       type={type}
-      className={cn(
-        baseStyles,
-        variantStyles[variant],
-        sizeStyles[size],
-        widthStyles,
-        className
-      )}
+      className={buttonClasses}
       disabled={disabled || isLoading}
       aria-busy={isLoading}
       {...props}
