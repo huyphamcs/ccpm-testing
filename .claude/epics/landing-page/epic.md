@@ -4,7 +4,7 @@ status: backlog
 created: 2025-10-23T14:15:55Z
 progress: 0%
 prd: .claude/prds/landing-page.md
-github: [Will be updated when synced to GitHub]
+github: https://github.com/huyphamcs/ccpm-testing/issues/1
 ---
 
 # Epic: Landing Page
@@ -253,23 +253,22 @@ High-level implementation tasks:
 
 ## Tasks Created
 
-- [ ] 001.md - Setup & Configuration (parallel: true, 8h)
-- [ ] 002.md - Core UI Component Library (parallel: true, 16h)
-- [ ] 003.md - Hero Section & Navigation (parallel: false, 16h)
-- [ ] 004.md - Features & Testimonials Sections (parallel: true, 16h)
-- [ ] 005.md - CTA Sections & Footer (parallel: true, 12h)
-- [ ] 006.md - Form Components & Validation (parallel: false, 20h)
-- [ ] 007.md - API Routes & Backend Integration (parallel: false, 16h)
-- [ ] 008.md - Analytics & SEO Implementation (parallel: true, 10h)
-- [ ] 009.md - Performance & Accessibility Optimization (parallel: false, 16h)
-- [ ] 010.md - QA, Testing & Deployment (parallel: false, 12h)
+- [ ] #10 - Performance & Accessibility Optimization (parallel: false)
+- [ ] #11 - QA, Testing & Deployment (parallel: false)
+- [ ] #2 - Setup & Configuration (parallel: true)
+- [ ] #3 - Features & Testimonials Sections (parallel: true)
+- [ ] #4 - Core UI Component Library (parallel: true)
+- [ ] #5 - Hero Section & Navigation (parallel: false)
+- [ ] #6 - CTA Sections & Footer (parallel: true)
+- [ ] #7 - API Routes & Backend Integration (parallel: false)
+- [ ] #8 - Form Components & Validation (parallel: false)
+- [ ] #9 - Analytics & SEO Implementation (parallel: true)
 
 **Summary:**
 - Total tasks: 10
-- Parallel tasks: 5 (001, 002, 004, 005, 008)
-- Sequential tasks: 5 (003, 006, 007, 009, 010)
+- Parallel tasks: 5 (can be worked on simultaneously)
+- Sequential tasks: 5 (have dependencies)
 - Estimated total effort: 142 hours (~3.5 weeks for 1 developer)
-
 ## Notes
 
 **Simplification Opportunities:**
