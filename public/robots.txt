@@ -1,0 +1,15 @@
+# robots.txt for Landing Page
+
+# Allow all bots to crawl the site
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://example.com/sitemap.xml
+
+# Crawl-delay (optional, helps prevent server overload)
+# Crawl-delay: 1
+
+# Disallow specific paths if needed in the future
+# Disallow: /api/
+# Disallow: /admin/
