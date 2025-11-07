@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "analyze": "ANALYZE=true npm run build"
+    "analyze": "ANALYZE=true npm run build",
+    "lighthouse": "lhci autorun",
+    "lighthouse:ci": "lhci autorun --config=lighthouserc.json"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@axe-core/react": "^4.11.0",
+    "@lhci/cli": "^0.15.1",
     "@next/bundle-analyzer": "^16.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
