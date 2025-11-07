@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Dynamic Form Components Exports
  *
