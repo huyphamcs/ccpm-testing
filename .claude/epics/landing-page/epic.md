@@ -1,8 +1,9 @@
 ---
 name: landing-page
-status: backlog
+status: completed
 created: 2025-10-23T14:15:55Z
-progress: 0%
+progress: 100%
+completed: 2025-11-07T08:00:16Z
 prd: .claude/prds/landing-page.md
 github: https://github.com/huyphamcs/ccpm-testing/issues/1
 ---
