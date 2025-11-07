@@ -44,6 +44,15 @@ export const COMPANY_SIZE_OPTIONS = [
 ] as const;
 
 /**
+ * Form Field Error
+ * Represents validation errors for a single form field
+ */
+export interface FormFieldError {
+  field: string;
+  messages: string[];
+}
+
+/**
  * Form Submission Status
  * Track the state of form submissions
  */
