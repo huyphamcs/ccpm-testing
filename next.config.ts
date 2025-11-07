@@ -1,4 +1,12 @@
 import type { NextConfig } from "next";
+import bundleAnalyzer from '@next/bundle-analyzer';
+
+// Bundle Analyzer Configuration (Stream B)
+// Enable with: ANALYZE=true npm run build
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+  openAnalyzer: true,
+});
 
 const nextConfig: NextConfig = {
   /* config options here */
