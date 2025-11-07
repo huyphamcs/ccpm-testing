@@ -4,14 +4,24 @@ import "./globals.css";
 import StructuredData from "@/components/seo/StructuredData";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 
+// Font Optimization (Stream B)
+// - Use font-display: swap for better performance (avoid FOIT - Flash of Invisible Text)
+// - Preload fonts to improve LCP (Largest Contentful Paint)
+// - Only load latin subset to reduce font file size
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap", // Use font-display: swap for better performance
+  preload: true, // Preload font for faster initial render
+  fallback: ["system-ui", "arial"], // Fallback fonts for better FOUT handling
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap", // Use font-display: swap for better performance
+  preload: true, // Preload font for faster initial render
+  fallback: ["Courier New", "monospace"], // Fallback fonts for better FOUT handling
 });
 
 export const metadata: Metadata = {
