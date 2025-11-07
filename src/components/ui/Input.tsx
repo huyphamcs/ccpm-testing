@@ -1,83 +1,144 @@
-import { InputProps } from "@/types/components";
-import { cn } from "@/lib/utils";
+/**
+ * Input Component
+ *
+ * A reusable input component with label, error states, and accessibility features.
+ * Designed to work seamlessly with React Hook Form.
+ */
+
+import type { InputHTMLAttributes, ReactNode } from 'react';
+import { forwardRef } from 'react';
+
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  /**
+   * Input label text
+   */
+  label?: string;
+
+  /**
+   * Error message to display
+   */
+  error?: string;
+
+  /**
+   * Helper text to display below input
+   */
+  helperText?: string;
+
+  /**
+   * Additional content to display in label (e.g., "optional" badge)
+   */
+  labelExtra?: ReactNode;
+
+  /**
+   * Whether the field is required
+   * @default false
+   */
+  required?: boolean;
+}
 
 /**
- * Input component with label, error states, and helper text
- * Accessible with proper ARIA attributes
+ * Input component with label, error states, and accessibility
+ * Uses forwardRef to work with React Hook Form
  */
-export function Input({
-  label,
-  error,
-  helperText,
-  variant = "default",
-  fullWidth = false,
-  className,
-  id,
-  required,
-  disabled,
-  ...props
-}: InputProps) {
-  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
-  const errorId = error ? `${inputId}-error` : undefined;
-  const helperId = helperText ? `${inputId}-helper` : undefined;
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      label,
+      error,
+      helperText,
+      labelExtra,
+      required = false,
+      id,
+      className = '',
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
+    // Generate unique ID if not provided
+    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
-  const baseStyles =
-    "block rounded-[var(--radius-md)] border px-4 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50";
+    // Base input styles
+    const baseInputStyles =
+      'w-full px-4 py-2 border rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-zinc-50 dark:disabled:bg-zinc-900';
 
-  const variantStyles = {
-    default:
-      "border-[var(--color-border)] bg-[var(--color-background)] focus-visible:ring-[var(--color-primary-600)] focus-visible:border-[var(--color-primary-600)]",
-    error:
-      "border-[var(--color-error)] bg-[var(--color-background)] focus-visible:ring-[var(--color-error)] focus-visible:border-[var(--color-error)]",
-    success:
-      "border-[var(--color-success)] bg-[var(--color-background)] focus-visible:ring-[var(--color-success)] focus-visible:border-[var(--color-success)]",
-  };
+    // Conditional styles based on error state
+    const conditionalStyles = error
+      ? 'border-red-500 focus:border-red-500 focus:ring-red-500 dark:border-red-600 dark:focus:border-red-600 dark:focus:ring-red-600'
+      : 'border-zinc-300 focus:border-zinc-900 focus:ring-zinc-900 dark:border-zinc-700 dark:focus:border-zinc-100 dark:focus:ring-zinc-100';
 
-  const widthStyles = fullWidth ? "w-full" : "";
-  const actualVariant = error ? "error" : variant;
+    // Text styles
+    const textStyles = 'text-black dark:text-white bg-white dark:bg-black';
 
-  return (
-    <div className={cn("flex flex-col gap-1.5", fullWidth && "w-full")}>
-      {label && (
-        <label
-          htmlFor={inputId}
-          className="text-sm font-medium text-[var(--color-foreground)]"
-        >
-          {label}
-          {required && <span className="ml-1 text-[var(--color-error)]">*</span>}
-        </label>
-      )}
-      <input
-        id={inputId}
-        className={cn(
-          baseStyles,
-          variantStyles[actualVariant],
-          widthStyles,
-          className
+    // Combine all input styles
+    const combinedInputClassName = `${baseInputStyles} ${conditionalStyles} ${textStyles} ${className}`;
+
+    return (
+      <div className="w-full">
+        {label && (
+          <label
+            htmlFor={inputId}
+            className="block mb-1.5 text-sm font-medium text-zinc-900 dark:text-zinc-100"
+          >
+            <span className="flex items-center justify-between">
+              <span>
+                {label}
+                {required && (
+                  <span className="ml-1 text-red-500" aria-label="required">
+                    *
+                  </span>
+                )}
+              </span>
+              {labelExtra && (
+                <span className="text-zinc-500 dark:text-zinc-400 font-normal">
+                  {labelExtra}
+                </span>
+              )}
+            </span>
+          </label>
         )}
-        aria-invalid={error ? "true" : "false"}
-        aria-describedby={cn(errorId, helperId).trim() || undefined}
-        aria-required={required}
-        disabled={disabled}
-        {...props}
-      />
-      {error && (
-        <p
-          id={errorId}
-          className="text-sm text-[var(--color-error)]"
-          role="alert"
-        >
-          {error}
-        </p>
-      )}
-      {helperText && !error && (
-        <p
-          id={helperId}
-          className="text-sm text-[var(--color-muted-foreground)]"
-        >
-          {helperText}
-        </p>
-      )}
-    </div>
-  );
-}
+
+        <input
+          ref={ref}
+          id={inputId}
+          disabled={disabled}
+          required={required}
+          aria-required={required}
+          aria-invalid={!!error}
+          aria-describedby={
+            error
+              ? `${inputId}-error`
+              : helperText
+                ? `${inputId}-helper`
+                : undefined
+          }
+          className={combinedInputClassName}
+          {...props}
+        />
+
+        {error && (
+          <p
+            id={`${inputId}-error`}
+            className="mt-1.5 text-sm text-red-600 dark:text-red-400"
+            role="alert"
+          >
+            {error}
+          </p>
+        )}
+
+        {!error && helperText && (
+          <p
+            id={`${inputId}-helper`}
+            className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400"
+          >
+            {helperText}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
+
+Input.displayName = 'Input';
+
+export default Input;

@@ -1,61 +1,92 @@
-"use client";
-
-import { useEffect } from "react";
-import { trackScrollDepth } from "@/lib/analytics";
-import Script from "next/script";
+'use client';
 
 /**
- * Google Analytics 4 component
- * Loads GA4 script and tracks scroll depth
+ * Google Analytics 4 Component
+ *
+ * This component integrates Google Analytics 4 (GA4) with Next.js.
+ * It uses the @next/third-parties package for optimized loading and
+ * automatically tracks pageviews.
+ *
+ * Features:
+ * - Optimized script loading with next/third-parties
+ * - Automatic scroll depth tracking
+ * - GDPR compliance support
+ * - Development mode logging
  */
-export function GoogleAnalytics() {
-  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
+
+import { GoogleAnalytics as NextGoogleAnalytics } from '@next/third-parties/google';
+import { useEffect } from 'react';
+import { initScrollDepthTracking, hasAnalyticsConsent } from '@/lib/analytics';
+
+export interface GoogleAnalyticsProps {
+  /**
+   * Google Analytics 4 Measurement ID
+   * Format: G-XXXXXXXXXX
+   */
+  measurementId?: string;
+}
+
+/**
+ * GoogleAnalytics Component
+ *
+ * Renders the GA4 tracking script and initializes scroll depth tracking.
+ *
+ * @example
+ * ```tsx
+ * // In your layout.tsx
+ * import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
+ *
+ * export default function RootLayout({ children }) {
+ *   return (
+ *     <html>
+ *       <body>
+ *         {children}
+ *         <GoogleAnalytics />
+ *       </body>
+ *     </html>
+ *   );
+ * }
+ * ```
+ */
+export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
+  // Get measurement ID from props or environment variable
+  const gaId = measurementId || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   useEffect(() => {
-    // Track scroll depth
-    let scrollDepths = [25, 50, 75, 100];
-    let trackedDepths = new Set<number>();
+    // Only initialize scroll tracking if we have consent and a measurement ID
+    if (!gaId || !hasAnalyticsConsent()) {
+      return;
+    }
 
-    const handleScroll = () => {
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY;
-      const scrollPercentage =
-        ((scrollTop + windowHeight) / documentHeight) * 100;
+    // Initialize scroll depth tracking
+    const cleanup = initScrollDepthTracking();
 
-      scrollDepths.forEach((depth) => {
-        if (scrollPercentage >= depth && !trackedDepths.has(depth)) {
-          trackedDepths.add(depth);
-          trackScrollDepth(depth);
-        }
-      });
-    };
+    // Cleanup on unmount
+    return cleanup;
+  }, [gaId]);
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Don't load GA in development or if no measurement ID
-  if (!GA_MEASUREMENT_ID || process.env.NODE_ENV === "development") {
+  // Don't render if no measurement ID is provided
+  if (!gaId) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(
+        '[GoogleAnalytics] No measurement ID provided. Set NEXT_PUBLIC_GA_MEASUREMENT_ID in your environment variables.'
+      );
+    }
     return null;
   }
 
-  return (
-    <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${GA_MEASUREMENT_ID}', {
-            page_path: window.location.pathname,
-          });
-        `}
-      </Script>
-    </>
-  );
+  // Don't load analytics if consent hasn't been granted
+  if (!hasAnalyticsConsent()) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[GoogleAnalytics] Analytics consent not granted. Skipping GA4 initialization.');
+    }
+    return null;
+  }
+
+  return <NextGoogleAnalytics gaId={gaId} />;
 }
+
+/**
+ * Export default for easier imports
+ */
+export default GoogleAnalytics;

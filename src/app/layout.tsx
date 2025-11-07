@@ -1,81 +1,95 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
-import { StructuredData } from "@/components/seo/StructuredData";
+import StructuredData from "@/components/seo/StructuredData";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 
+// Font Optimization (Stream B)
+// - Use font-display: swap for better performance (avoid FOIT - Flash of Invisible Text)
+// - Preload fonts to improve LCP (Largest Contentful Paint)
+// - Only load latin subset to reduce font file size
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap", // Use font-display: swap for better performance
+  preload: true, // Preload font for faster initial render
+  fallback: ["system-ui", "arial"], // Fallback fonts for better FOUT handling
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap", // Use font-display: swap for better performance
+  preload: true, // Preload font for faster initial render
+  fallback: ["Courier New", "monospace"], // Fallback fonts for better FOUT handling
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://epic-landing-page.com'),
   title: {
-    default: "YourBrand - Streamline Your Workflow, 10x Your Productivity",
-    template: "%s | YourBrand",
+    default: 'Epic Landing Page - Create Stunning Landing Pages That Convert',
+    template: '%s | Epic Landing Page'
   },
-  description:
-    "The all-in-one platform for modern teams to collaborate, automate, and deliver results faster than ever. Start your 14-day free trial today.",
+  description: 'Create stunning landing pages that convert visitors into customers. Professional templates, drag-and-drop builder, and analytics to grow your business.',
   keywords: [
-    "productivity",
-    "collaboration",
-    "workflow automation",
-    "team management",
-    "project management",
-    "SaaS platform",
+    'landing page builder',
+    'landing page templates',
+    'conversion optimization',
+    'lead generation',
+    'marketing pages',
+    'landing page design',
+    'website builder',
+    'conversion rate optimization',
+    'sales funnel',
+    'marketing automation'
   ],
-  authors: [{ name: "YourBrand" }],
-  creator: "YourBrand",
-  publisher: "YourBrand",
-  metadataBase: new URL("https://yourbrand.com"),
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://yourbrand.com",
-    siteName: "YourBrand",
-    title: "YourBrand - Streamline Your Workflow, 10x Your Productivity",
-    description:
-      "The all-in-one platform for modern teams to collaborate, automate, and deliver results faster than ever.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "YourBrand - Collaboration Platform",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@yourbrand",
-    creator: "@yourbrand",
-    title: "YourBrand - Streamline Your Workflow, 10x Your Productivity",
-    description:
-      "The all-in-one platform for modern teams to collaborate, automate, and deliver results faster than ever.",
-    images: ["/twitter-image.png"],
-  },
+  authors: [{ name: 'Epic Landing Page Team' }],
+  creator: 'Epic Landing Page',
+  publisher: 'Epic Landing Page',
   robots: {
     index: true,
     follow: true,
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
-  verification: {
-    google: "your-google-site-verification-code",
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://epic-landing-page.com',
+    siteName: 'Epic Landing Page',
+    title: 'Epic Landing Page - Create Stunning Landing Pages That Convert',
+    description: 'Create stunning landing pages that convert visitors into customers. Professional templates, drag-and-drop builder, and analytics to grow your business.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Epic Landing Page - Create stunning landing pages',
+        type: 'image/png',
+      },
+    ],
   },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@epiclanding',
+    creator: '@epiclanding',
+    title: 'Epic Landing Page - Create Stunning Landing Pages That Convert',
+    description: 'Create stunning landing pages that convert visitors into customers. Professional templates, drag-and-drop builder, and analytics to grow your business.',
+    images: ['/twitter-image.png'],
+  },
+  alternates: {
+    canonical: 'https://epic-landing-page.com',
+  },
+  verification: {
+    google: 'your-google-verification-code',
+    yandex: 'your-yandex-verification-code',
+  },
+  category: 'technology',
 };
 
 export default function RootLayout({
@@ -90,6 +104,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         {children}
         <GoogleAnalytics />

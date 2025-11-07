@@ -1,51 +1,65 @@
+import React from 'react';
+import { Organization, WebSite, WithContext } from 'schema-dts';
+
+interface StructuredDataProps {
+  organizationData?: WithContext<Organization>;
+  websiteData?: WithContext<WebSite>;
+}
+
 /**
- * Structured Data (JSON-LD) component for SEO
- * Implements Schema.org vocabulary for Organization and WebSite
+ * StructuredData component for implementing JSON-LD structured data
+ * Supports Organization and WebSite schema types for better SEO
  */
-export function StructuredData() {
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "YourBrand",
-    url: "https://yourbrand.com",
-    logo: "https://yourbrand.com/logo.png",
-    description:
-      "The all-in-one platform for modern teams to collaborate, automate, and deliver results faster.",
+export default function StructuredData({
+  organizationData,
+  websiteData
+}: StructuredDataProps) {
+  const defaultOrganization: WithContext<Organization> = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Epic Landing Page',
+    url: 'https://epic-landing-page.com',
+    logo: 'https://epic-landing-page.com/logo.png',
+    description: 'Create stunning landing pages that convert visitors into customers',
     sameAs: [
-      "https://twitter.com/yourbrand",
-      "https://linkedin.com/company/yourbrand",
-      "https://github.com/yourbrand",
+      'https://twitter.com/epiclanding',
+      'https://www.facebook.com/epiclanding',
+      'https://www.linkedin.com/company/epiclanding'
     ],
     contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "Customer Support",
-      email: "support@yourbrand.com",
-    },
+      '@type': 'ContactPoint',
+      contactType: 'Customer Service',
+      email: 'support@epic-landing-page.com'
+    }
   };
 
-  const websiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "YourBrand",
-    url: "https://yourbrand.com",
-    description:
-      "Streamline your workflow and 10x your productivity with our all-in-one collaboration platform.",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: "https://yourbrand.com/search?q={search_term_string}",
-      "query-input": "required name=search_term_string",
-    },
+  const defaultWebsite: WithContext<WebSite> = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Epic Landing Page',
+    url: 'https://epic-landing-page.com',
+    description: 'Create stunning landing pages that convert visitors into customers'
   };
+
+  const organization = organizationData || defaultOrganization;
+  const website = websiteData || defaultWebsite;
 
   return (
     <>
+      {/* Organization Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organization)
+        }}
       />
+
+      {/* Website Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(website)
+        }}
       />
     </>
   );
