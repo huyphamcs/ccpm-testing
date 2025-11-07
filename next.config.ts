@@ -102,12 +102,14 @@ const nextConfig: NextConfig = {
   // Production optimizations
   productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
 
-  // Reduce runtime overhead
-  swcMinify: true, // Use SWC for faster minification
-
   // Experimental features for better performance
   experimental: {
     optimizePackageImports: ['react-hook-form', '@hookform/resolvers'], // Tree shake large libraries
+  },
+
+  // Turbopack configuration (Next.js 16+)
+  turbopack: {
+    // Empty config to acknowledge we're using Turbopack with webpack fallback
   },
 
   // Security Headers Configuration

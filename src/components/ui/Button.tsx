@@ -85,6 +85,8 @@ export default function Button({
       type={type}
       disabled={disabled || isLoading}
       className={combinedClassName}
+      aria-busy={isLoading}
+      aria-live="polite"
       {...props}
     >
       {isLoading ? (
@@ -95,6 +97,8 @@ export default function Button({
             fill="none"
             viewBox="0 0 24 24"
             aria-hidden="true"
+            role="img"
+            aria-label="Loading"
           >
             <circle
               className="opacity-25"
