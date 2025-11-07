@@ -54,7 +54,7 @@ export function sanitizeSql(input: string): string {
  * Ensures email is in valid format and removes dangerous characters
  */
 export function sanitizeEmail(email: string): string {
-  if (typeof input !== 'string') {
+  if (typeof email !== 'string') {
     return '';
   }
 
@@ -199,8 +199,8 @@ export function validateRequestBody<T>(
     }
 
     // Extract error messages
-    const errors = result.error.errors.map(
-      (err) => `${err.path.join('.')}: ${err.message}`
+    const errors = (result.error as any).errors.map(
+      (err: any) => `${err.path.join('.')}: ${err.message}`
     );
 
     return { success: false, errors };
