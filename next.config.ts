@@ -3,6 +3,81 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
 
+  // ============================================================================
+  // Bundle Optimization Configuration (Stream B)
+  // ============================================================================
+  // Optimize webpack configuration for code splitting and bundle size reduction
+  webpack: (config, { isServer }) => {
+    // Optimize chunk splitting for better caching and parallel loading
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+          // Separate vendor chunks for better caching
+          default: false,
+          vendors: false,
+          // Framework chunk (React, Next.js core)
+          framework: {
+            name: 'framework',
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/](react|react-dom|scheduler|next)[\\/]/,
+            priority: 40,
+            enforce: true,
+          },
+          // Common libraries chunk
+          lib: {
+            test: /[\\/]node_modules[\\/]/,
+            name(module: any) {
+              const packageName = module.context.match(
+                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+              )?.[1];
+              return `npm.${packageName?.replace('@', '')}`;
+            },
+            priority: 30,
+            minChunks: 1,
+            reuseExistingChunk: true,
+          },
+          // Commons chunk for shared code
+          commons: {
+            name: 'commons',
+            minChunks: 2,
+            priority: 20,
+            reuseExistingChunk: true,
+          },
+        },
+      },
+    };
+
+    // Only apply to client-side bundles
+    if (!isServer) {
+      // Tree shaking optimization
+      config.optimization.usedExports = true;
+      config.optimization.sideEffects = true;
+    }
+
+    return config;
+  },
+
+  // Compiler optimizations
+  compiler: {
+    // Remove console logs in production (except errors and warnings)
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+
+  // Production optimizations
+  productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
+
+  // Reduce runtime overhead
+  swcMinify: true, // Use SWC for faster minification
+
+  // Experimental features for better performance
+  experimental: {
+    optimizePackageImports: ['react-hook-form', '@hookform/resolvers'], // Tree shake large libraries
+  },
+
   // Security Headers Configuration
   async headers() {
     return [
