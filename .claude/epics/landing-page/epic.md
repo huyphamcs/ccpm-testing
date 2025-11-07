@@ -1,8 +1,9 @@
 ---
 name: landing-page
-status: backlog
+status: completed
 created: 2025-10-23T14:15:55Z
-progress: 0%
+completed: 2025-11-07T08:44:04Z
+progress: 100%
 prd: .claude/prds/landing-page.md
 github: [Will be updated when synced to GitHub]
 ---
