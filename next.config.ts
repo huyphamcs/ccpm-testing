@@ -4,6 +4,38 @@ const nextConfig: NextConfig = {
   /* config options here */
 
   // ============================================================================
+  // Image Optimization Configuration (Stream A)
+  // ============================================================================
+  images: {
+    // Enable modern image formats for better compression
+    formats: ['image/avif', 'image/webp'],
+
+    // Configure device sizes for responsive images
+    // These correspond to common breakpoints: mobile, tablet, laptop, desktop
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+
+    // Configure image sizes for different use cases
+    // Used when an image doesn't have a specific width defined
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+
+    // Allow SVG images with security restrictions
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+
+    // Remote patterns for external images (Next.js 13+ recommended approach)
+    remotePatterns: [
+      // Example pattern for CDN or external images
+      // {
+      //   protocol: 'https',
+      //   hostname: 'example.com',
+      //   port: '',
+      //   pathname: '/images/**',
+      // },
+    ],
+  },
+
+  // ============================================================================
   // Bundle Optimization Configuration (Stream B)
   // ============================================================================
   // Optimize webpack configuration for code splitting and bundle size reduction
